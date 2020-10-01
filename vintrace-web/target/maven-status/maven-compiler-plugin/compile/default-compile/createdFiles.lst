@@ -1,0 +1,6 @@
+com\vintrace\model\GrapeComponent.class
+com\vintrace\utils\FileUtils.class
+com\vintrace\beans\FileMgmt.class
+com\vintrace\model\Wine.class
+com\vintrace\beans\WineMgmt.class
+com\vintrace\beans\FileUploadManager.class
