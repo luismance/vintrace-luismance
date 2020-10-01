@@ -7,9 +7,19 @@
 		<p:growl id="messages" />
 
 		<p:menubar>
-			<p:menuitem value="Wine List" url="/index.xhtml"  icon="pi pi-list" />
+			<p:menuitem value="Wine List" url="/index.xhtml" icon="pi pi-list" />
 
-			<p:menuitem value="JSON File List" url="/fileList.xhtml" icon="pi pi-file" />
+			<p:menuitem value="JSON File List" url="/fileList.xhtml"
+				icon="pi pi-file" />
+
+			<f:facet name="options">
+				<h:form enctype="multipart/form-data">
+				<p:outputLabel value="Upload JSON File" for="fileUpload"></p:outputLabel>
+					<p:fileUpload id="fileUpload" listener="#{fileUploadManager.handleFileUpload}"
+						update="msg" mode="advanced" />
+					<p:growl id="msg" showDetail="true" />
+				</h:form>
+			</f:facet>
 		</p:menubar>
 	</h:form>
 </ui:composition>

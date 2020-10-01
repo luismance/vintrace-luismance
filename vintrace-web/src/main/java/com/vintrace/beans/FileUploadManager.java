@@ -27,6 +27,7 @@ public class FileUploadManager implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private UploadedFile file;
 	private UploadedFiles files;
 
 	@Inject
@@ -34,11 +35,11 @@ public class FileUploadManager implements Serializable {
 
 	@PostConstruct
 	public void init() {
-		
-		if (!conversation.isTransient()){
-	        conversation.end();
-	    }
-		
+
+		if (!conversation.isTransient()) {
+			conversation.end();
+		}
+
 		conversation.begin();
 	}
 
@@ -48,6 +49,21 @@ public class FileUploadManager implements Serializable {
 
 	public void setFiles(UploadedFiles files) {
 		this.files = files;
+	}
+
+	public UploadedFile getFile() {
+		return file;
+	}
+
+	public void setFile(UploadedFile file) {
+		this.file = file;
+	}
+
+	public void upload() {
+		if (file != null) {
+			FacesMessage message = new FacesMessage("Successful", file.getFileName() + " is uploaded.");
+			FacesContext.getCurrentInstance().addMessage(null, message);
+		}
 	}
 
 	public void uploadMultiple() {
@@ -82,5 +98,17 @@ public class FileUploadManager implements Serializable {
 	public void handleFileUpload(FileUploadEvent event) {
 		FacesMessage msg = new FacesMessage("Successful", event.getFile().getFileName() + " is uploaded.");
 		FacesContext.getCurrentInstance().addMessage(null, msg);
+
+		try {
+			OutputStream os = new FileOutputStream(FileUtils.getJsonsDir() + "/" + event.getFile().getFileName());
+
+			// Starts writing the bytes in it
+			os.write(event.getFile().getContent());
+
+			// Close the file
+			os.close();
+		} catch (Exception e) {
+			System.out.println("Exception: " + e);
+		}
 	}
 }
