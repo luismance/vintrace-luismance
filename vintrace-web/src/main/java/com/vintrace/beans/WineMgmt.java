@@ -35,10 +35,10 @@ public class WineMgmt implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	@Inject
-    private Conversation conversation;
-	
+	private Conversation conversation;
+
 	private List<Wine> wines = new ArrayList<>();
 	private Wine selectedWine = new Wine();
 	private Map<String, Double> componentBreakdown = new HashMap<String, Double>();
@@ -50,13 +50,12 @@ public class WineMgmt implements Serializable {
 	public void init() {
 		wines = initWineList();
 		componentProperties = initComponentProperties();
-		if (!conversation.isTransient()){
-	        conversation.end();
-	    }
-		
+		if (!conversation.isTransient()) {
+			conversation.end();
+		}
+
 		conversation.begin();
 	}
-	
 
 	public void refreshBreakdown() {
 		System.out.println("Update Breakdown");
@@ -66,7 +65,7 @@ public class WineMgmt implements Serializable {
 		} else {
 			breakdownLabel = "Select Property";
 		}
-		
+
 		componentBreakdown = new HashMap<String, Double>();
 
 		for (GrapeComponent gc : selectedWine.getSortedComponents()) {
@@ -83,7 +82,7 @@ public class WineMgmt implements Serializable {
 
 			putToMap(componentBreakdown, String.join("|", propsVal), gc.getPercentage());
 		}
-		
+
 		Map<String, Double> sorted = new LinkedHashMap<>();
 		componentBreakdown.entrySet().stream().sorted(Map.Entry.<String, Double> comparingByValue().reversed()).forEachOrdered(x -> sorted.put(x.getKey(), x.getValue()));
 		setComponentBreakdown(sorted);
@@ -110,9 +109,9 @@ public class WineMgmt implements Serializable {
 
 			Gson g = new Gson();
 			for (String json : jsons) {
-				String content = Files.readString(Paths.get(json), StandardCharsets.UTF_8);
+				List<String> content = Files.readAllLines(Paths.get(json), StandardCharsets.UTF_8);
 
-				Wine wine = g.fromJson(content, Wine.class);
+				Wine wine = g.fromJson(String.join(" ", content), Wine.class);
 				wineList.add(wine);
 			}
 
@@ -139,7 +138,7 @@ public class WineMgmt implements Serializable {
 	public String formatPercentage(Double percentage) {
 		return String.format("%.0f%%", percentage);
 	}
-	
+
 	public List<Wine> getWines() {
 		return wines;
 	}
